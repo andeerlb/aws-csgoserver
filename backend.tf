@@ -1,6 +1,8 @@
 terraform {
-  backend "local" {
-    path = "./terraform.tfstate"
+  backend "s3" {
+    bucket = "babinskitfstate"
+    key    = "csgoserver/terraform.tfstate"
+    region = "us-east-1"
   }
 }
 
