@@ -9,3 +9,8 @@ variable "azs" {
     type = list(string)
     default = ["us-east-1a"]
 }
+
+variable "ssh_key_pair" {
+    type = string
+    default = "csgoserver"
+}

@@ -1,6 +1,6 @@
 resource "aws_security_group_rule" "ssh" {
   type              = "ingress"
-  from_port         = 0
+  from_port         = 22
   to_port           = 22
   protocol          = "tcp"
   security_group_id = aws_security_group.csgo.id 

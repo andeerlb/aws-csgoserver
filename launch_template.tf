@@ -8,7 +8,7 @@ resource "aws_launch_template" "csgo" {
     instance_type = "t2.micro"
     user_data = filebase64("${path.module}/files/data.sh")
 
-    # key_name = "test"
+    key_name = var.ssh_key_pair
 
     monitoring {
         enabled = true
