@@ -30,5 +30,3 @@ rm /home/$USER/csgoserver_monitor
 
 su $USER -s ./csgoserver update
 su $USER -s ./csgoserver start
-
-yum update -y
