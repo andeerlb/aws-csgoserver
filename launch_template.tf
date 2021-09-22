@@ -1,12 +1,21 @@
+data "template_file" "file_user_data" {
+  template = "${file("${path.module}/files/data.sh.tpl")}"
+
+  vars = {
+    SERVER_NAME = var.server_name
+    RCON_PASSWD = var.rcon_passwd
+  }
+}
+
 resource "aws_launch_template" "csgo" {
     name = "csgo"
 
     disable_api_termination = true
     ebs_optimized = false
-    image_id = "ami-087c17d1fe0178315"
+    image_id = var.image_id
     instance_initiated_shutdown_behavior = "terminate"
     instance_type = "t2.micro"
-    user_data = filebase64("${path.module}/files/data.sh")
+    user_data = base64encode(data.template_file.file_user_data.rendered) 
 
     key_name = var.ssh_key_pair
 
@@ -14,10 +23,10 @@ resource "aws_launch_template" "csgo" {
         device_name = "/dev/xvda"
 
         ebs {
-        volume_size = 60
+            volume_size = 60
         }
     }
-    
+
     monitoring {
         enabled = true
     }
