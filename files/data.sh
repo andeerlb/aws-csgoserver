@@ -19,7 +19,7 @@ echo gslt=\"13D2E94677FC1C3859AF60FAFBE17234\" >> /home/$USER/lgsm/config-lgsm/c
 su $USER -s crontab -l > /home/$USER/csgoserver_update
 su $USER -s crontab -l > /home/$USER/csgoserver_monitor
 
-echo "0 * * * * su - $USER -c '/home/$USER/lgsm update'" > /home/$USER/csgoserver_update
+echo "0 * * * * su - $USER -c '/home/$USER/csgoserver update'" > /home/$USER/csgoserver_update
 echo "*/5 * * * *  su - $USER -c '/home/$USER/csgoserver monitor'" > /home/$USER/csgoserver_monitor
 
 crontab /home/$USER/csgoserver_update
