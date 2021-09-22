@@ -7,6 +7,46 @@ resource "aws_security_group_rule" "ssh" {
   cidr_blocks = ["189.27.213.227/32"]
 }
 
+resource "aws_security_group_rule" "game_rcon_tcp" {
+  type              = "ingress"
+  from_port         = 27015
+  to_port           = 27015
+  protocol          = "tcp"
+  security_group_id = aws_security_group.csgo.id 
+  cidr_blocks      = ["0.0.0.0/0"]
+  ipv6_cidr_blocks = ["::/0"]
+}
+
+resource "aws_security_group_rule" "game_rcon_udp" {
+  type              = "ingress"
+  from_port         = 27015
+  to_port           = 27015
+  protocol          = "udp"
+  security_group_id = aws_security_group.csgo.id 
+  cidr_blocks      = ["0.0.0.0/0"]
+  ipv6_cidr_blocks = ["::/0"]
+}
+
+resource "aws_security_group_rule" "game_rcon_tv" {
+  type              = "ingress"
+  from_port         = 27020
+  to_port           = 27020
+  protocol          = "udp"
+  security_group_id = aws_security_group.csgo.id 
+  cidr_blocks      = ["0.0.0.0/0"]
+  ipv6_cidr_blocks = ["::/0"]
+}
+
+resource "aws_security_group_rule" "game_rcon_client" {
+  type              = "egress"
+  from_port         = 27005
+  to_port           = 27005
+  protocol          = "udp"
+  security_group_id = aws_security_group.csgo.id 
+  cidr_blocks      = ["0.0.0.0/0"]
+  ipv6_cidr_blocks = ["::/0"]
+}
+
 resource "aws_security_group_rule" "all_egress" {
     type              = "egress"
     from_port = 0

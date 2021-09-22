@@ -10,6 +10,14 @@ resource "aws_launch_template" "csgo" {
 
     key_name = var.ssh_key_pair
 
+    block_device_mappings {
+        device_name = "/dev/xvda"
+
+        ebs {
+        volume_size = 60
+        }
+    }
+    
     monitoring {
         enabled = true
     }
