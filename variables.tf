@@ -17,7 +17,7 @@ variable "ssh_key_pair" {
 
 variable "server_name" {
     type = string
-    default = "Dos@Amigos"
+    default = "DosAmigos"
 }
 
 variable "rcon_passwd" {
@@ -28,4 +28,19 @@ variable "rcon_passwd" {
 variable "image_id" {
     type = string
     default = "ami-09b9b17384f68fd7c"
+}
+
+variable "prefix_name" {
+    type = string
+    default = "csgoserver"
+}
+
+variable "gslt_token" {
+    type = string
+    default = "13D2E94677FC1C3859AF60FAFBE17234"
+}
+
+variable "bucket_s3_backup_name" {
+    type = string
+    default = ""
 }

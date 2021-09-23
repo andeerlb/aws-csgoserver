@@ -1,5 +1,5 @@
 resource "aws_autoscaling_group" "csgo" {
-  name = "csgoserver"
+  name = local.name_with_prefix
   availability_zones = var.azs
   desired_capacity   = 1
   max_size           = 2
