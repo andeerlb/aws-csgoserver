@@ -15,7 +15,7 @@ su $USER -s ./linuxgsm.sh csgoserver
 
 aws s3 cp s3://csgoserver/backup-default-server/backup-default-server.zip .
 unzip -q -o backup-default-server.zip -d /home/$USER/
-sudo chown -R ec2-user:ec2-user /home/$USER$USER$USER/serverfiles
+sudo chown -R $USER:$USER /home/$USER/serverfiles
 rm -f backup-default-server.zip
 
 su $USER -s ./csgoserver auto-install
@@ -57,10 +57,10 @@ su $USER -s crontab -l > /home/$USER/csgoserver_monitor
 echo "0 * * * * su - $USER -c '/home/$USER/csgoserver update'" > /home/$USER/csgoserver_update
 echo "*/5 * * * *  su - $USER -c '/home/$USER/csgoserver monitor'" > /home/$USER/csgoserver_monitor
 
-crontab /home/$USER/csgoserver_update
-crontab /home/$USER/csgoserver_monitor
+su $USER -s crontab /home/$USER/csgoserver_update
+su $USER -s crontab /home/$USER/csgoserver_monitor
 
-rm /home/$USER/csgoserver_updateecho
+rm /home/$USER/csgoserver_update
 rm /home/$USER/csgoserver_monitor
 
 # su $USER -s ./csgoserver update
