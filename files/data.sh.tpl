@@ -13,6 +13,10 @@ cd /home/$USER/
 
 su $USER -s ./linuxgsm.sh csgoserver
 
+aws s3 cp s3://csgoserver/backup-default-server/backup-default-server.zip .
+unzip -q -o backup-default-server.zip -d /home/$USER/lgsm/
+rm -f backup-default-server.zipbackup-default-server.zip
+
 # su $USER -s ./csgoserver auto-install
 
 # echo gslt=\"${GSLT_TOKEN}\" >> /home/$USER/lgsm/config-lgsm/csgoserver/csgoserver.cfg

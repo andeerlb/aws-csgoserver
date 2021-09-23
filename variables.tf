@@ -42,5 +42,5 @@ variable "gslt_token" {
 
 variable "bucket_s3_backup_name" {
     type = string
-    default = ""
+    default = "csgoserver"
 }
