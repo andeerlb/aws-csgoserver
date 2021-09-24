@@ -14,11 +14,25 @@ cd /home/$USER/
 su $USER -s ./linuxgsm.sh csgoserver
 
 aws s3 cp s3://csgoserver/backup-default-server/backup-default-server.zip .
+aws s3 cp s3://csgoserver/backup-default-server/sourcemod-1.10.0-git6514-linux.tar.gz .
+aws s3 cp s3://csgoserver/backup-default-server/mmsource-1.11.0-git1145-linux.tar.gz .
+#aws s3 cp s3://csgoserver/backup-default-server/get5_0.7.2.zip .
+
 unzip -q -o backup-default-server.zip -d /home/$USER/
-sudo chown -R $USER:$USER /home/$USER/serverfiles
+#unzip -q -o get5_0.7.2.zip -d /home/$USER/serverfiles/csgo/   
+tar -xf sourcemod-1.10.0-git6514-linux.tar.gz -C /home/$USER/serverfiles/csgo/
+tar -xf mmsource-1.11.0-git1145-linux.tar.gz -C /home/$USER/serverfiles/csgo/
+
 rm -f backup-default-server.zip
+rm -f sourcemod-1.10.0-git6514-linux.tar.gz
+rm -f mmsource-1.11.0-git1145-linux.tar.gz
+#rm -rf get5
+
+sudo chown -R $USER:$USER /home/$USER/serverfiles
 
 su $USER -s ./csgoserver auto-install
+
+echo "\"STEAM_1:0:119601991\"		\"5:z\"" >> /home/$USER/serverfiles/csgo/addons/sourcemod/configs/admins_simple.ini
 
 echo gslt=\"${GSLT_TOKEN}\" >> /home/$USER/lgsm/config-lgsm/csgoserver/csgoserver.cfg
 echo "tickrate=\"128\"" >> /home/$USER/lgsm/config-lgsm/csgoserver/csgoserver.cfg
@@ -51,14 +65,12 @@ writeid
 writeipa
 EOT
 
-echo "0 * * * * su - $USER -c '/home/$USER/csgoserver update'" > /home/$USER/csgoserver_update
-echo "*/5 * * * *  su - $USER -c '/home/$USER/csgoserver monitor'" > /home/$USER/csgoserver_monitor
+echo "0 * * * * su - $USER -c '/home/$USER/csgoserver update'" > /home/$USER/crontab_file
+echo "*/5 * * * *  su - $USER -c '/home/$USER/csgoserver monitor'" > /home/$USER/crontab_file
 
-crontab "/home/$USER/csgoserver_update"
-crontab "/home/$USER/csgoserver_monitor"
+crontab "/home/$USER/crontab_file"
 
-rm /home/$USER/csgoserver_update
-rm /home/$USER/csgoserver_monitor
+rm /home/$USER/crontab_file
 
 su $USER -s ./csgoserver update
 su $USER -s ./csgoserver start
