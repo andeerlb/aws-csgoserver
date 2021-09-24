@@ -65,8 +65,8 @@ writeid
 writeipa
 EOT
 
-echo "0 * * * * su - $USER -c '/home/$USER/csgoserver update'" > /home/$USER/crontab_file
-echo "*/5 * * * *  su - $USER -c '/home/$USER/csgoserver monitor'" > /home/$USER/crontab_file
+echo "0 * * * * su - $USER -c '/home/$USER/csgoserver update'" >> /home/$USER/crontab_file
+echo "*/5 * * * *  su - $USER -c '/home/$USER/csgoserver monitor'" >> /home/$USER/crontab_file
 
 crontab "/home/$USER/crontab_file"
 
