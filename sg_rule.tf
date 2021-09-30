@@ -4,7 +4,7 @@ resource "aws_security_group_rule" "ssh" {
   to_port           = 22
   protocol          = "tcp"
   security_group_id = aws_security_group.csgo.id 
-  cidr_blocks = ["189.27.213.227/32"]
+  cidr_blocks = ["177.16.149.19/32"]
 }
 
 resource "aws_security_group_rule" "game_rcon_tcp" {
