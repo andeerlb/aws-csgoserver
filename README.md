@@ -45,7 +45,7 @@ aws ssm get-parameter \
 Update `image_id` in `variables.tf` with the returned ID (e.g., `ami-0c1234567890abcdef`).
 
 #### Connect via SSH:
-```bash
+```bash 
 ssh -i ~/.ssh/<YOUR_KEY_PAIR_FILE>.pem ubuntu@<PUBLIC_IP>
 ```
 
@@ -54,7 +54,6 @@ or you can access via putty on windows.
 #### Check installation progress:
 ```bash
 # Cloud-init logs (user data)
-```
 sudo tail -f /var/log/cloud-init-output.log
 ```
 or to show the complete log
