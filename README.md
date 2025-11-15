@@ -41,13 +41,14 @@ terraform destroy -var="server_name=" -var="rcon_passwd=" -var="gslt_token="
 
 ### 3. Validate AMI (EC2 Image)
 
-The default AMI in `variables.tf` may be outdated. Get the latest Amazon Linux 2023 AMI:
+The default AMI in `variables.tf` may be outdated.
 
 ```bash
 aws ssm get-parameter \
-  --name /aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64 \
+  --name "/aws/service/canonical/ubuntu/server/22.04/stable/current/amd64/hvm/ebs-gp2/ami-id" \
   --region <YOUR_REGION> \
-  --query "Parameter.Value" --output text
+  --query "Parameter.Value" \
+  --output text
 ```
 
 Update `image_id` in `variables.tf` with the returned ID (e.g., `ami-0c1234567890abcdef`).
@@ -65,18 +66,9 @@ terraform apply
 terraform output -json | jq -r '.instance_public_ip.value'
 ```
 
-Or via AWS CLI:
-```bash
-aws ssm get-parameter \
-  --name "/aws/service/canonical/ubuntu/server/22.04/stable/current/amd64/hvm/ebs-gp2/ami-id" \
-  --region <YOUR_REGION> \
-  --query "Parameter.Value" \
-  --output text
-```
-
 #### Connect via SSH:
 ```bash
-ssh -i ~/.ssh/<YOUR_KEY_PAIR_FILE>.pem ec2-user@<PUBLIC_IP>
+ssh -i ~/.ssh/<YOUR_KEY_PAIR_FILE>.pem ubuntu@<PUBLIC_IP>
 ```
 
 or you can access via putty on windows.  
@@ -123,7 +115,7 @@ changelevel de_dust2
 
 SSH into the instance and edit:
 ```bash
-nano /home/ec2-user/serverfiles/cs2/game/csgo/cfg/cs2server.cfg
+nano /home/ubuntu/serverfiles/cs2/game/csgo/cfg/cs2server.cfg
 ```
 
 Add:
@@ -146,7 +138,7 @@ Restart:
 
 Edit server config:
 ```bash
-nano /home/ec2-user/serverfiles/cs2/game/csgo/cfg/cs2server.cfg
+nano /home/ubuntu/serverfiles/cs2/game/csgo/cfg/cs2server.cfg
 ```
 
 Add:
