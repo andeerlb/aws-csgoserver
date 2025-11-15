@@ -51,7 +51,7 @@ output "important_commands" {
   ./cs2server monitor    - Check status
   
   Logs:
-  tail -f /home/ec2-user/lgsm/log/cs2server/console/cs2server-console.log
+  sudo tail -f /home/ec2-user/lgsm/log/cs2server/console/cs2server-console.log
   
   EOT
 }

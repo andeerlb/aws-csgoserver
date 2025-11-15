@@ -7,27 +7,27 @@ variable "default_tags" {
 
 variable "azs" {
   type    = list(string)
-  default = ["sa-east-1a"] # São Paulo Availability Zone A
+  default = ["sa-east-1a"]
 }
 
 variable "ssh_key_pair" {
   type    = string
-  default = ""
+  default = "wtpoc-keypair"
 }
 
 variable "server_name" {
   type    = string
-  default = ""
+  default = "watercooler"
 }
 
 variable "ssh_allowed_cidrs" {
   type    = list(string)
-  default = []
+  default = ["161.22.57.32/32"]
 }
 
 variable "rcon_passwd" {
   type    = string
-  default = ""
+  default = "123456"
 }
 
 variable "image_id" {
@@ -42,5 +42,5 @@ variable "prefix_name" {
 
 variable "gslt_token" {
   type    = string
-  default = ""
+  default = "62A650B8FBDC792C344DAB28CBC19425"
 }
