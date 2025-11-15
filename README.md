@@ -1,7 +1,3 @@
-# Quick Setup Guide - CS2 Server on AWS
-
-## Complete Step-by-Step
-
 ### 1. Prerequisites
 
 #### 1.1 Create SSH Key in AWS
@@ -49,11 +45,11 @@ variable "gslt_token" {
     type = string
     default = "YOUR_STEAM_TOKEN"   # ← Steam token here
 }
+```
 
-variable "ssh_key_pair" {
-    type = string
-    default = "cs2server"         # ← Your SSH key name
-}
+#### 2.1 Quick command
+```
+terraform apply -var="server_name=" -var="rcon_passwd=" -var="gslt_token="
 ```
 
 > **Tip**: For secure passwords, use: `openssl rand -base64 16`
