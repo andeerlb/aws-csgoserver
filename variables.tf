@@ -7,7 +7,7 @@ variable "default_tags" {
 
 variable "azs" {
   type    = list(string)
-  default = ["sa-east-1a"]
+  default = ["sa-east-1a"] # São Paulo Availability Zone A
 }
 
 variable "ssh_key_pair" {
@@ -17,15 +17,22 @@ variable "ssh_key_pair" {
 
 variable "server_name" {
   type    = string
+  default = ""
+}
+
+variable "ssh_allowed_cidrs" {
+  type    = list(string)
+  default = []
 }
 
 variable "rcon_passwd" {
   type    = string
+  default = ""
 }
 
 variable "image_id" {
   type    = string
-  default = "ami-09b9b17384f68fd7c"
+  default = "ami-0d7069e98d190f5ce" 
 }
 
 variable "prefix_name" {
@@ -35,4 +42,5 @@ variable "prefix_name" {
 
 variable "gslt_token" {
   type    = string
+  default = ""
 }

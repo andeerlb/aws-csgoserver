@@ -28,28 +28,13 @@ chmod 400 ~/.ssh/cs2server.pem
 
 ### 2. Configure Variables
 
-Edit the `variables.tf` file and adjust:
-
-```hcl
-variable "server_name" {
-    type = string
-    default = "MY_CS2_SERVER"     # ← Your name here
-}
-
-variable "rcon_passwd" {
-    type = string
-    default = "YOUR_SECURE_PASSWORD"  # ← Strong password here
-}
-
-variable "gslt_token" {
-    type = string
-    default = "YOUR_STEAM_TOKEN"   # ← Steam token here
-}
-```
+Edit the `variables.tf` to adjust the values.
 
 #### 2.1 Quick command
 ```
+terraform plan -var="server_name=" -var="rcon_passwd=" -var="gslt_token="
 terraform apply -var="server_name=" -var="rcon_passwd=" -var="gslt_token="
+terraform destroy -var="server_name=" -var="rcon_passwd=" -var="gslt_token="
 ```
 
 > **Tip**: For secure passwords, use: `openssl rand -base64 16`
@@ -59,14 +44,10 @@ terraform apply -var="server_name=" -var="rcon_passwd=" -var="gslt_token="
 The default AMI in `variables.tf` may be outdated. Get the latest Amazon Linux 2023 AMI:
 
 ```bash
-# For sa-east-1 region (São Paulo)
-aws ec2 describe-images \
-  --owners amazon \
-  --filters "Name=name,Values=al2023-ami-2023*-x86_64" \
-          "Name=state,Values=available" \
-  --query 'Images | sort_by(@, &CreationDate) | [-1].ImageId' \
-  --output text \
-  --region sa-east-1
+aws ssm get-parameter \
+  --name /aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64 \
+  --region <YOUR_REGION> \
+  --query "Parameter.Value" --output text
 ```
 
 Update `image_id` in `variables.tf` with the returned ID (e.g., `ami-0c1234567890abcdef`).
@@ -86,22 +67,30 @@ terraform output -json | jq -r '.instance_public_ip.value'
 
 Or via AWS CLI:
 ```bash
-aws ec2 describe-instances \
-  --filters "Name=tag:Name,Values=cs2server_*" "Name=instance-state-name,Values=running" \
-  --query 'Reservations[0].Instances[0].PublicIpAddress' \
-  --output text \
-  --region sa-east-1
+aws ssm get-parameter \
+  --name "/aws/service/canonical/ubuntu/server/22.04/stable/current/amd64/hvm/ebs-gp2/ami-id" \
+  --region <YOUR_REGION> \
+  --query "Parameter.Value" \
+  --output text
 ```
 
 #### Connect via SSH:
 ```bash
-ssh -i ~/.ssh/cs2server.pem ec2-user@<PUBLIC_IP>
+ssh -i ~/.ssh/<YOUR_KEY_PAIR_FILE>.pem ec2-user@<PUBLIC_IP>
 ```
+
+or you can access via putty on windows.  
 
 #### Check installation progress:
 ```bash
 # Cloud-init logs (user data)
+```
 sudo tail -f /var/log/cloud-init-output.log
+```
+or to show the complete log
+```
+sudo less /var/log/cloud-init.log
+```
 
 # After installation completes
 ./cs2server details
@@ -130,27 +119,7 @@ changelevel de_dust2
 
 ### 6. Post-Deploy Configuration
 
-#### 6.1 Adjust Firewall for Your IP
-
-```bash
-# Get your public IP
-curl ifconfig.me
-
-# Edit sg_rule.tf and add:
-resource "aws_security_group_rule" "ssh_my_ip" {
-  type              = "ingress"
-  from_port         = 22
-  to_port           = 22
-  protocol          = "tcp"
-  security_group_id = aws_security_group.cs2.id 
-  cidr_blocks       = ["YOUR_IP/32"]
-}
-
-# Apply change
-terraform apply
-```
-
-#### 6.2 Configure Maps and Game Modes
+#### 6.1 Configure Maps and Game Modes
 
 SSH into the instance and edit:
 ```bash
@@ -173,7 +142,7 @@ Restart:
 ./cs2server restart
 ```
 
-#### 6.3 Add Admins
+#### 6.2 Add Admins
 
 Edit server config:
 ```bash

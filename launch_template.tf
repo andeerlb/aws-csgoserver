@@ -21,7 +21,7 @@ resource "aws_launch_template" "cs2" {
   key_name = var.ssh_key_pair
 
   block_device_mappings {
-    device_name = "/dev/xvda"
+    device_name = "/dev/sda1"
 
     ebs {
       volume_size = 80
