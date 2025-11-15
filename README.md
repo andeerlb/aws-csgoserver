@@ -1,3 +1,7 @@
+# Quick Setup Guide - CS2 Server on AWS
+
+> **To deploy the infra** Check out [DEPLOYMENT.md](DEPLOYMENT.md) for deploying servers using Terraform Workspaces!
+
 ### 1. Prerequisites
 
 #### 1.1 Create SSH Key in AWS
@@ -26,19 +30,6 @@ chmod 400 ~/.ssh/cs2server.pem
 
 > **Important**: Each GSLT can only be used on one server at a time. If you have multiple servers, you need multiple tokens.
 
-### 2. Configure Variables
-
-Edit the `variables.tf` to adjust the values.
-
-#### 2.1 Quick command
-```
-terraform plan -var="server_name=" -var="rcon_passwd=" -var="gslt_token="
-terraform apply -var="server_name=" -var="rcon_passwd=" -var="gslt_token="
-terraform destroy -var="server_name=" -var="rcon_passwd=" -var="gslt_token="
-```
-
-> **Tip**: For secure passwords, use: `openssl rand -base64 16`
-
 ### 3. Validate AMI (EC2 Image)
 
 The default AMI in `variables.tf` may be outdated.
@@ -52,19 +43,6 @@ aws ssm get-parameter \
 ```
 
 Update `image_id` in `variables.tf` with the returned ID (e.g., `ami-0c1234567890abcdef`).
-
-### 4. Deploy Infrastructure
-
-```bash
-terraform init
-terraform plan
-terraform apply
-```
-
-#### Get instance IP:
-```bash
-terraform output -json | jq -r '.instance_public_ip.value'
-```
 
 #### Connect via SSH:
 ```bash
@@ -156,16 +134,8 @@ Add:
 ./cs2server monitor   # Check if running
 ```
 
-### 7. Small instance type (lag/performance)
-```bash
-# Edit launch_template.tf
-# Change: instance_type = "t3a.large"  # or larger
-terraform apply
-```
-
 ### 8. Additional Resources
 
 - [LinuxGSM CS2 Docs](https://docs.linuxgsm.com/game-servers/counter-strike-2)
 - [CS2 Server Commands](https://totalcsgo.com/commands)
 - [Steam Workshop](https://steamcommunity.com/app/730/workshop/)
-- [CS2 Discord](https://discord.gg/counter-strike)

@@ -12,22 +12,20 @@ variable "azs" {
 
 variable "ssh_key_pair" {
   type    = string
-  default = ""
+  default = "wtpoc-keypair"
 }
 
 variable "server_name" {
   type    = string
-  default = ""
 }
 
 variable "ssh_allowed_cidrs" {
   type    = list(string)
-  default = []
+  default = ["161.22.57.32/32"]
 }
 
 variable "rcon_passwd" {
   type    = string
-  default = ""
 }
 
 variable "image_id" {
@@ -35,12 +33,6 @@ variable "image_id" {
   default = "ami-0d7069e98d190f5ce" 
 }
 
-variable "prefix_name" {
-  type    = string
-  default = ""
-}
-
 variable "gslt_token" {
   type    = string
-  default = ""
 }
