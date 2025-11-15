@@ -5,14 +5,10 @@
 # OS: Ubuntu 22.04 LTS
 # ===============================
 
-# -------------------------------
-# Set the user
-# -------------------------------
 USER="ubuntu"
 
 # -------------------------------
 # Update system and install required packages
-# Includes 32-bit libraries needed for SteamCMD
 # -------------------------------
 sudo apt update -y
 sudo dpkg --add-architecture i386
@@ -24,20 +20,20 @@ sudo apt install -y \
   tmux jq bc
 
 # -------------------------------
-# Move to the user's home directory
+# Move to user's home directory
 # -------------------------------
 cd /home/$USER/
 
 # -------------------------------
-# Download and prepare LinuxGSM installer
+# Download LinuxGSM
 # -------------------------------
-wget -O /home/$USER/linuxgsm.sh https://linuxgsm.sh
-chmod +x /home/$USER/linuxgsm.sh
+wget -O linuxgsm.sh https://linuxgsm.sh
+chmod +x linuxgsm.sh
 
 # -------------------------------
 # Install CS2 server using LinuxGSM
 # -------------------------------
-su - $USER -c "bash /home/$USER/linuxgsm.sh cs2server"
+su - $USER -c "bash linuxgsm.sh cs2server"
 
 # -------------------------------
 # Auto-install CS2 server
@@ -45,12 +41,18 @@ su - $USER -c "bash /home/$USER/linuxgsm.sh cs2server"
 su - $USER -c "/home/$USER/cs2server auto-install"
 
 # -------------------------------
-# Configure GSLT token and tickrate
+# Configure LGSM (GSLT & tickrate)
 # -------------------------------
-if [ -d "/home/$USER/lgsm/config-lgsm/cs2server" ]; then
-  echo "gslt=\"${GSLT_TOKEN}\"" >> /home/$USER/lgsm/config-lgsm/cs2server/cs2server.cfg
-  echo "tickrate=\"128\"" >> /home/$USER/lgsm/config-lgsm/cs2server/cs2server.cfg
-  echo "defaultmap=\"de_dust2\"" >> /home/$USER/lgsm/config-lgsm/cs2server/cs2server.cfg
+CONFIG_FILE="/home/$USER/lgsm/config-lgsm/cs2server/cs2server.cfg"
+
+if [ -f "$CONFIG_FILE" ]; then
+  # Remove old values
+  sed -i "/^gslt=/d" "$CONFIG_FILE"
+  sed -i "/^tickrate=/d" "$CONFIG_FILE"
+
+  # Add correct values
+  echo "gslt=${GSLT_TOKEN}" >> "$CONFIG_FILE"
+  echo "tickrate=128" >> "$CONFIG_FILE"
 fi
 
 # -------------------------------
@@ -59,7 +61,7 @@ fi
 mkdir -p /home/$USER/serverfiles/game/csgo/cfg
 
 # -------------------------------
-# Write server configuration file
+# Write CS2 game configuration file
 # -------------------------------
 cat <<EOT > /home/$USER/serverfiles/game/csgo/cfg/cs2server.cfg
 hostname "${SERVER_NAME}"
@@ -84,15 +86,14 @@ writeip
 EOT
 
 # -------------------------------
-# Set proper permissions for LGSM and server files
+# Fix permissions
 # -------------------------------
 sudo chown -R $USER:$USER /home/$USER/serverfiles
 sudo chown -R $USER:$USER /home/$USER/lgsm
 
 # -------------------------------
-# Setup cron jobs for automatic update and server monitoring
+# Setup cron jobs
 # -------------------------------
-# Backup current user crontab and append new jobs
 crontab -u $USER -l > /home/$USER/crontab_file 2>/dev/null || true
 echo "0 * * * * /home/$USER/cs2server update" >> /home/$USER/crontab_file
 echo "*/5 * * * * /home/$USER/cs2server monitor" >> /home/$USER/crontab_file
