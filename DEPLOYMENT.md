@@ -6,9 +6,9 @@ This guide explains how to deploy multiple CS2 servers using Terraform Workspace
 
 - **Shared Infrastructure**: VPC and Security Group (created once)
 - **Per Server**: Separate EC2 instance, Auto Scaling Group, IAM resources
-- **Workspace `default`**: Server 1 (watercooler)
-- **Workspace `server2`**: Server 2 (watercooler-2)
-- **Workspace `server3`**: Server 3 (watercooler-3)
+- **Workspace `default`**: Server 1
+- **Workspace `server2`**: Server 2
+- **Workspace `server3`**: Server 3
 - ...and so on
 
 Each server gets:
@@ -61,9 +61,9 @@ terraform apply
 
 Create `server2.tfvars`:
 ```hcl
-server_name = "watercooler-2"
+server_name = "SERVER_NAME"
 gslt_token  = "YOUR_TOKEN_2_HERE"
-rcon_passwd = "password2"
+rcon_passwd = "PASSWORD"
 ```
 
 ### Step 2: Create workspace and deploy
