@@ -53,7 +53,7 @@ if [ -f "$CONFIG_FILE" ]; then
   sed -i "/^startparameters=/d" "$CONFIG_FILE"
 
   # Set correct values
-  echo "startparameters=\"-dedicated -ip 0.0.0.0 -port 27015 -tickrate 128 -maxplayers 16 -authkey  +exec cs2server.cfg +map de_dust2 +sv_setsteamaccount ${GSLT_TOKEN}\"" >> "$CONFIG_FILE"
+  echo "startparameters=\"-dedicated -ip 0.0.0.0 -port 27015 -tickrate 128 -maxplayers 16 -authkey +exec cs2server.cfg +map de_dust2 +sv_setsteamaccount ${GSLT_TOKEN}\"" >> "$CONFIG_FILE"
 fi
 # -------------------------------
 # Create CS2 server configuration directory if missing
