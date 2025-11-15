@@ -3,8 +3,8 @@ resource "aws_security_group_rule" "ssh" {
   from_port         = 22
   to_port           = 22
   protocol          = "tcp"
-  security_group_id = aws_security_group.csgo.id 
-  cidr_blocks = ["177.16.149.19/32"]
+  security_group_id = aws_security_group.cs2.id
+  cidr_blocks       = []
 }
 
 resource "aws_security_group_rule" "game_rcon_tcp" {
@@ -12,9 +12,9 @@ resource "aws_security_group_rule" "game_rcon_tcp" {
   from_port         = 27015
   to_port           = 27015
   protocol          = "tcp"
-  security_group_id = aws_security_group.csgo.id 
-  cidr_blocks      = ["0.0.0.0/0"]
-  ipv6_cidr_blocks = ["::/0"]
+  security_group_id = aws_security_group.cs2.id
+  cidr_blocks       = ["0.0.0.0/0"]
+  ipv6_cidr_blocks  = ["::/0"]
 }
 
 resource "aws_security_group_rule" "game_rcon_udp" {
@@ -22,37 +22,37 @@ resource "aws_security_group_rule" "game_rcon_udp" {
   from_port         = 27015
   to_port           = 27015
   protocol          = "udp"
-  security_group_id = aws_security_group.csgo.id 
-  cidr_blocks      = ["0.0.0.0/0"]
-  ipv6_cidr_blocks = ["::/0"]
+  security_group_id = aws_security_group.cs2.id
+  cidr_blocks       = ["0.0.0.0/0"]
+  ipv6_cidr_blocks  = ["::/0"]
 }
 
 resource "aws_security_group_rule" "game_rcon_tv" {
   type              = "ingress"
   from_port         = 27020
   to_port           = 27020
-  protocol          = "udp"
-  security_group_id = aws_security_group.csgo.id 
-  cidr_blocks      = ["0.0.0.0/0"]
-  ipv6_cidr_blocks = ["::/0"]
+  protocol          = "tcp"
+  security_group_id = aws_security_group.cs2.id
+  cidr_blocks       = ["0.0.0.0/0"]
+  ipv6_cidr_blocks  = ["::/0"]
 }
 
 resource "aws_security_group_rule" "game_rcon_client" {
-  type              = "egress"
+  type              = "ingress"
   from_port         = 27005
   to_port           = 27005
   protocol          = "udp"
-  security_group_id = aws_security_group.csgo.id 
-  cidr_blocks      = ["0.0.0.0/0"]
-  ipv6_cidr_blocks = ["::/0"]
+  security_group_id = aws_security_group.cs2.id
+  cidr_blocks       = ["0.0.0.0/0"]
+  ipv6_cidr_blocks  = ["::/0"]
 }
 
 resource "aws_security_group_rule" "all_egress" {
-    type              = "egress"
-    from_port = 0
-    to_port           = 0
-    protocol          = "-1"
-    security_group_id = aws_security_group.csgo.id 
-    cidr_blocks      = ["0.0.0.0/0"]
-    ipv6_cidr_blocks = ["::/0"]
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  security_group_id = aws_security_group.cs2.id
+  cidr_blocks       = ["0.0.0.0/0"]
+  ipv6_cidr_blocks  = ["::/0"]
 }

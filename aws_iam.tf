@@ -1,19 +1,4 @@
-resource "aws_iam_policy" "csgoserver_s3_access" {
-  name = "${var.prefix_name}_s3_access"
-
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action   = "s3:*"
-        Effect   = "Allow"
-        Resource = "arn:aws:s3:::${var.bucket_s3_backup_name}/*"
-      },
-    ]
-  })
-}
-
-resource "aws_iam_role" "csgoserver" {
+resource "aws_iam_role" "cs2server" {
   name = local.name_with_prefix
 
   assume_role_policy = jsonencode({
@@ -30,7 +15,7 @@ resource "aws_iam_role" "csgoserver" {
     ]
   })
 
-  managed_policy_arns = [aws_iam_policy.csgoserver_s3_access.arn]
+  managed_policy_arns = []
 
   tags = merge({}, var.default_tags)
 }

@@ -24,36 +24,36 @@ variable "azs" {
 }
 
 variable "database_subnets" {
-  type = list(string)
+  type    = list(string)
   default = []
 }
 
 variable "private_subnets" {
-    type = list(string)
-    default = []
+  type    = list(string)
+  default = []
 }
 
 variable "public_subnets" {
-    type = list(string)
-    default = []
+  type    = list(string)
+  default = []
 }
 
 variable "enable_nat_gateway" {
-    type = bool
-    default = false
+  type    = bool
+  default = false
 }
 
 variable "enable_vpn_gateway" {
-    type = bool
-    default = false
+  type    = bool
+  default = false
 }
 
 variable "enable_dns_hostnames" {
-    type = bool
-    default = true
+  type    = bool
+  default = true
 }
 
 variable "enable_dns_support" {
-    type = bool
-    default = true
+  type    = bool
+  default = true
 }
