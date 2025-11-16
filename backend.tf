@@ -1,6 +1,6 @@
 terraform {
   backend "s3" {
-    bucket = "wtpoc-terraform-state"
+    bucket = ""
     key    = "cs2server/terraform.tfstate"
     region = "us-east-1"
   }
@@ -8,4 +8,5 @@ terraform {
 
 provider "aws" {
   region = "sa-east-1"
+
 }
