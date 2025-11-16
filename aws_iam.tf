@@ -17,8 +17,6 @@ resource "aws_iam_role" "cs2server" {
     ]
   })
 
-  managed_policy_arns = []
-
   tags = merge({
     ServerKey  = each.key
     ServerName = each.value.server_name

@@ -43,17 +43,11 @@ su - $USER -c "/home/$USER/cs2server auto-install"
 # -------------------------------
 # Configure LGSM (GSLT, tickrate, default map, start parameters)
 # -------------------------------
-CONFIG_FILE="/home/$USER/lgsm/config-lgsm/cs2server/cs2server.cfg"
+CONFIG_FILE="/home/$USER/lgsm/config-lgsm/cs2server/_default.cfg"
 
 if [ -f "$CONFIG_FILE" ]; then
-  # Remove old values to avoid duplicates
-  sed -i "/^gslt=/d" "$CONFIG_FILE"
-  sed -i "/^tickrate=/d" "$CONFIG_FILE"
-  sed -i "/^defaultmap=/d" "$CONFIG_FILE"
-  sed -i "/^startparameters=/d" "$CONFIG_FILE"
-
   # Set correct values
-  echo "startparameters=\"-dedicated -ip 0.0.0.0 -port 27015 -tickrate 128 -maxplayers 16 -authkey +exec cs2server.cfg +map de_dust2 +sv_setsteamaccount ${GSLT_TOKEN}\"" >> "$CONFIG_FILE"
+  sed -i "s|^startparameters=.*|startparameters=\"-dedicated -ip $\{ip} -port $\{port} -maxplayers $\{maxplayers} -authkey $\{wsapikey} +exec $\{selfname}.cfg -tickrate 128 +map de_dust2 +sv_setsteamaccount ${GSLT_TOKEN}\"|" "$CONFIG_FILE"
 fi
 # -------------------------------
 # Create CS2 server configuration directory if missing
