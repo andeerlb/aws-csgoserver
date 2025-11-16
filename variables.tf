@@ -10,17 +10,9 @@ variable "azs" {
   default = ["sa-east-1a"]
 }
 
-variable "ssh_key_pair" {
+variable "image_id" {
   type    = string
-  default = "wtpoc-keypair"
-}
-
-variable "server_passwd" {
-  type    = string
-}
-
-variable "server_name" {
-  type    = string
+  default = "ami-0d7069e98d190f5ce" 
 }
 
 variable "ssh_allowed_cidrs" {
@@ -28,15 +20,15 @@ variable "ssh_allowed_cidrs" {
   default = ["161.22.57.32/32"]
 }
 
-variable "rcon_passwd" {
-  type    = string
-}
-
-variable "image_id" {
-  type    = string
-  default = "ami-0d7069e98d190f5ce" 
-}
-
-variable "gslt_token" {
-  type    = string
+# List of CS2 servers to deploy
+# Each server will be an isolated EC2 instance
+variable "servers" {
+  type = map(object({
+    server_name   = string
+    gslt_token    = string
+    rcon_passwd   = string
+    server_passwd = string
+    ssh_key_pair  = string
+  }))
+  description = "Map of CS2 servers to deploy. Key is used as unique identifier."
 }

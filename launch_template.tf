@@ -1,34 +1,38 @@
 data "template_file" "file_user_data" {
+  for_each = var.servers
+  
   template = file("${path.module}/files/data.sh.tpl")
 
   vars = {
-    SERVER_NAME = var.server_name
-    RCON_PASSWD = var.rcon_passwd
-    GSLT_TOKEN  = var.gslt_token
-    SERVER_PASSWD = var.server_passwd
+    SERVER_NAME   = each.value.server_name
+    RCON_PASSWD   = each.value.rcon_passwd
+    GSLT_TOKEN    = each.value.gslt_token
+    SERVER_PASSWD = each.value.server_passwd
   }
 }
 
 resource "aws_launch_template" "cs2" {
-  name = local.name_with_prefix
+  for_each = var.servers
+  
+  name = "cs2server_${each.value.server_name}"
 
   disable_api_termination              = true
   ebs_optimized                        = true
   image_id                             = var.image_id
   instance_initiated_shutdown_behavior = "terminate"
   instance_type                        = "t3a.medium"
-  user_data                            = base64encode(data.template_file.file_user_data.rendered)
+  user_data                            = base64encode(data.template_file.file_user_data[each.key].rendered)
 
-  key_name = var.ssh_key_pair
+  key_name = each.value.ssh_key_pair
 
   block_device_mappings {
     device_name = "/dev/sda1"
 
     ebs {
-      volume_size = 80
-      volume_type = "gp3"
-      iops        = 3000
-      throughput  = 125
+      volume_size           = 80
+      volume_type           = "gp3"
+      iops                  = 3000
+      throughput            = 125
       delete_on_termination = true
     }
   }
@@ -50,15 +54,19 @@ resource "aws_launch_template" "cs2" {
   tag_specifications {
     resource_type = "instance"
     tags = merge({
-      Name = local.name_with_prefix
+      Name       = "cs2server_${each.value.server_name}"
+      ServerKey  = each.key
+      ServerName = each.value.server_name
     }, var.default_tags)
   }
 
   iam_instance_profile {
-    name = aws_iam_instance_profile.cs2server.name
+    name = aws_iam_instance_profile.cs2server[each.key].name
   }
 
   tags = merge({
-    Name = local.name_with_prefix
+    Name       = "cs2server_${each.value.server_name}"
+    ServerKey  = each.key
+    ServerName = each.value.server_name
   }, var.default_tags)
 }

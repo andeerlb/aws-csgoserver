@@ -1,5 +1,7 @@
 resource "aws_iam_role" "cs2server" {
-  name = local.name_with_prefix
+  for_each = var.servers
+  
+  name = "cs2server_${each.value.server_name}_role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -17,5 +19,8 @@ resource "aws_iam_role" "cs2server" {
 
   managed_policy_arns = []
 
-  tags = merge({}, var.default_tags)
+  tags = merge({
+    ServerKey  = each.key
+    ServerName = each.value.server_name
+  }, var.default_tags)
 }

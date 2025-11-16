@@ -1,10 +1,54 @@
-# Quick Setup Guide - CS2 Server on AWS
+## 1. Quick Setup to deploym
 
-> **To deploy the infra** Check out [DEPLOYMENT.md](DEPLOYMENT.md) for deploying servers using Terraform Workspaces!
+### 1.1 Edit `servers.tfvars`
 
-### 1. Prerequisites
+```hcl
+servers = {
+  server1 = {
+    server_name   = "server-2"
+    gslt_token    = "YOUR_TOKEN_1"
+    rcon_passwd   = "rcon_pass_1"
+    server_passwd = ""              # Empty = public server
+    ssh_key_pair  = "wtpoc-keypair"
+  }
+  
+  server2 = {
+    server_name   = "server-2"
+    gslt_token    = "YOUR_TOKEN_2"
+    rcon_passwd   = "rcon_pass_2"
+    server_passwd = "private123"    # Set password for private server
+    ssh_key_pair  = "wtpoc-keypair"
+  }
+  
+  server3 = {
+    server_name   = "server-3"
+    gslt_token    = "YOUR_TOKEN_3"
+    rcon_passwd   = "rcon_pass_3"
+    server_passwd = ""
+    ssh_key_pair  = "wtpoc-keypair"
+  }
+}
+```
 
-#### 1.1 Create SSH Key in AWS
+#### 1.2 to run
+Execute the terraform commands with `-var-file="servers.tfvars"`
+```bash
+terraform init
+terraform plan -var-file="servers.tfvars"
+terraform apply -var-file="servers.tfvars"
+terraform destroy -var-file="servers.tfvars"
+```
+
+## 2. Cost Estimation
+
+Each server costs ~$42/month:
+- **2 servers**: ~$84/month
+- **3 servers**: ~$126/month
+- **5 servers**: ~$210/month
+
+### 3. Prerequisites
+
+#### 3.1 Create SSH Key in AWS
 ```bash
 # In AWS console or via CLI
 aws ec2 create-key-pair \
@@ -17,7 +61,7 @@ chmod 400 ~/.ssh/cs2server.pem
 
 > **Important**: If you want to use a different key name, update the `ssh_key_pair` variable in `variables.tf`
 
-#### 1.2 Generate Steam GSLT Token
+#### 3.2 Generate Steam GSLT Token
 
 1. Go to: https://steamcommunity.com/dev/managegameservers
 2. Log in with your Steam account
@@ -30,7 +74,7 @@ chmod 400 ~/.ssh/cs2server.pem
 
 > **Important**: Each GSLT can only be used on one server at a time. If you have multiple servers, you need multiple tokens.
 
-### 3. Validate AMI (EC2 Image)
+### 4. Validate AMI (EC2 Image - optional)
 
 The default AMI in `variables.tf` may be outdated.
 
@@ -44,14 +88,14 @@ aws ssm get-parameter \
 
 Update `image_id` in `variables.tf` with the returned ID (e.g., `ami-0c1234567890abcdef`).
 
-#### Connect via SSH:
+#### 4.1 Connect via SSH:
 ```bash 
 ssh -i ~/.ssh/<YOUR_KEY_PAIR_FILE>.pem ubuntu@<PUBLIC_IP>
 ```
 
 or you can access via putty on windows.  
 
-#### Check installation progress:
+#### 4.2 Check installation progress:
 ```bash
 # Cloud-init logs (user data)
 sudo tail -f /var/log/cloud-init-output.log
@@ -61,7 +105,7 @@ or to show the complete log
 sudo less /var/log/cloud-init.log
 ```
 
-# After installation completes
+## 5. After installation completes
 ./cs2server details
 ./cs2server console  # CTRL+B followed by D to exit (tmux)
 ```
@@ -124,7 +168,7 @@ Add:
 // Format: rcon_password for full control
 ```
 
-#### Manual Commands:
+#### 6.3 Manual Commands:
 ```bash
 ./cs2server update    # Update server
 ./cs2server restart   # Restart
@@ -133,7 +177,7 @@ Add:
 ./cs2server monitor   # Check if running
 ```
 
-### 8. Additional Resources
+### 7. Additional Resources
 
 - [LinuxGSM CS2 Docs](https://docs.linuxgsm.com/game-servers/counter-strike-2)
 - [CS2 Server Commands](https://totalcsgo.com/commands)
