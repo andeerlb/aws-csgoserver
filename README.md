@@ -28,18 +28,8 @@ terraform destroy -var-file="servers.tfvars"
 
 ### 3. Prerequisites
 
-#### 3.1 Create SSH Key in AWS
-```bash
-# In AWS console or via CLI
-aws ec2 create-key-pair \
-  --key-name cs2server \
-  --query 'KeyMaterial' \
-  --output text > ~/.ssh/cs2server.pem
-
-chmod 400 ~/.ssh/cs2server.pem
-```
-
-> **Important**: If you want to use a different key name, update the `ssh_key_pair` variable in `variables.tf`
+#### 3.1 Create Key Pair in AWS
+Update the `ssh_key_pair` variable in `servers.tfvars`
 
 #### 3.2 Generate Steam GSLT Token
 
@@ -50,7 +40,7 @@ chmod 400 ~/.ssh/cs2server.pem
    - **App ID**: `730` (Counter-Strike 2)
    - **Memo**: `CS2 AWS Server` (or your preferred description)
 5. Copy the generated token (format: `XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX`)
-6. Update the `gslt_token` variable in `variables.tf`
+6. Update the `gslt_token` variable in `servers.tfvars`
 
 > **Important**: Each GSLT can only be used on one server at a time. If you have multiple servers, you need multiple tokens.
 
@@ -164,3 +154,4 @@ Add:
 - [CS2 Server Commands](https://totalcsgo.com/commands)
 - [Steam Workshop](https://steamcommunity.com/app/730/workshop/)
 - [Rcon tool](https://rcon.srcds.pro/)
+
