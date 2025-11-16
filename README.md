@@ -9,24 +9,9 @@ servers = {
     gslt_token    = "YOUR_TOKEN_1"
     rcon_passwd   = "rcon_pass_1"
     server_passwd = ""              # Empty = public server
-    ssh_key_pair  = "wtpoc-keypair"
+    ssh_key_pair  = "" # ssh key to remotly access your instance
   }
-  
-  server2 = {
-    server_name   = "server-2"
-    gslt_token    = "YOUR_TOKEN_2"
-    rcon_passwd   = "rcon_pass_2"
-    server_passwd = "private123"    # Set password for private server
-    ssh_key_pair  = "wtpoc-keypair"
-  }
-  
-  server3 = {
-    server_name   = "server-3"
-    gslt_token    = "YOUR_TOKEN_3"
-    rcon_passwd   = "rcon_pass_3"
-    server_passwd = ""
-    ssh_key_pair  = "wtpoc-keypair"
-  }
+  ...
 }
 ```
 
