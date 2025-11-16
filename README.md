@@ -91,6 +91,8 @@ sudo less /var/log/cloud-init.log
 Or add to favorites in the server browser.
 
 #### 5.3 Test RCON:
+You may use https://rcon.srcds.pro/ to send commands to our server or
+
 ```bash
 # On server via SSH
 ./cs2server console
@@ -154,4 +156,5 @@ Add:
 - [CS2 Server Commands](https://totalcsgo.com/commands)
 - [Steam Workshop](https://steamcommunity.com/app/730/workshop/)
 - [Rcon tool](https://rcon.srcds.pro/)
+
 
