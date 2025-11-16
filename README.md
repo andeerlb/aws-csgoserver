@@ -24,12 +24,7 @@ terraform apply -var-file="servers.tfvars"
 terraform destroy -var-file="servers.tfvars"
 ```
 
-## 2. Cost Estimation
-
-Each server costs ~$42/month:
-- **2 servers**: ~$84/month
-- **3 servers**: ~$126/month
-- **5 servers**: ~$210/month
+## 2. [Cost Estimation](COST_ESTIMATION.md)
 
 ### 3. Prerequisites
 
