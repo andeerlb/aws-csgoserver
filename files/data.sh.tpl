@@ -32,11 +32,6 @@ sudo chown -R $USER:$USER /home/$USER/serverfiles
 # -------------------------------
 # Restore from S3 backup if exists
 # -------------------------------
-BACKUP_FILE="cs2-server-backup.tar.gz"
-
-# -------------------------------
-# Restore from S3 backup if exists
-# -------------------------------
 S3_SERVERFILES_BACKUP="${S3_SERVERFILES_BACKUP}"
 BACKUP_FILE="cs2-server-backup.tar.gz"
 LOCAL_TMP="/tmp/$BACKUP_FILE"
