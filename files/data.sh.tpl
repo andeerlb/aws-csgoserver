@@ -29,25 +29,62 @@ cd /home/$USER/
 # -------------------------------
 BACKUP_FILE="cs2-server-backup.tar.gz"
 
-if aws s3 ls "s3://$S3_SERVERFILES_BACKUP/$BACKUP_FILE" 2>/dev/null; then
-  echo "Found backup file in S3, downloading..."
-  
-  # Download backup
-  aws s3 cp "s3://$S3_SERVERFILES_BACKUP/$BACKUP_FILE" "/tmp/$BACKUP_FILE"
-  
-  # Extract to serverfiles directory
-  tar -xzf "/tmp/$BACKUP_FILE" -C /home/$USER/serverfiles/
-  
-  # Fix permissions
-  chown -R $USER:$USER /home/$USER/serverfiles/
-  
-  # Cleanup
-  rm "/tmp/$BACKUP_FILE"
-  
-  echo "Backup restored successfully!"
+# -------------------------------
+# Restore from S3 backup if exists
+# -------------------------------
+S3_SERVERFILES_BACKUP="${S3_SERVERFILES_BACKUP}"
+BACKUP_FILE="cs2-server-backup.tar.gz"
+LOCAL_TMP="/tmp/$BACKUP_FILE"
+SERVERFILES_DIR="/home/$USER/serverfiles"
+
+echo ""
+echo "-------------------------------"
+echo "Checking for existing backup in S3..."
+echo "S3 Bucket: ${S3_SERVERFILES_BACKUP}"
+echo "Backup File: $BACKUP_FILE"
+echo ""
+
+# Check if backup exists in S3
+if aws s3 ls "s3://${S3_SERVERFILES_BACKUP}/$BACKUP_FILE" >/dev/null 2>&1; then
+    echo "Found backup file in S3, downloading..."
+
+    # Check if Transfer Acceleration is enabled
+    ACCEL_STATUS=$(aws s3api get-bucket-accelerate-configuration --bucket "$S3_SERVERFILES_BACKUP" --query 'Status' --output text 2>/dev/null || echo "Disabled")
+
+    if [[ "$ACCEL_STATUS" == "Enabled" ]]; then
+        echo "Using S3 Transfer Acceleration for download..."
+        AWS_ENDPOINT="https://${S3_SERVERFILES_BACKUP}.s3-accelerate.amazonaws.com"
+        aws s3 cp "s3://${S3_SERVERFILES_BACKUP}/$BACKUP_FILE" "$LOCAL_TMP" \
+            --endpoint-url "$AWS_ENDPOINT" \
+            --expected-size 48G \
+            --only-show-errors
+    else
+        echo "Downloading without Transfer Acceleration..."
+        aws s3 cp "s3://${S3_SERVERFILES_BACKUP}/$BACKUP_FILE" "$LOCAL_TMP" \
+            --expected-size 48G \
+            --only-show-errors
+    fi
+
+    # Ensure serverfiles directory exists
+    mkdir -p "$SERVERFILES_DIR"
+
+    # Extract backup
+    echo "Extracting backup to $SERVERFILES_DIR..."
+    tar -xzf "$LOCAL_TMP" -C "$SERVERFILES_DIR"
+
+    # Fix permissions
+    chown -R $USER:$USER "$SERVERFILES_DIR"
+
+    # Cleanup
+    rm -f "$LOCAL_TMP"
+
+    echo "Backup restored successfully!"
 else
-  echo "No backup found in S3, proceeding with fresh install..."
+    echo "No backup found in S3, proceeding with fresh install..."
 fi
+echo "-------------------------------"
+echo ""
+
 
 # -------------------------------
 # Download LinuxGSM
