@@ -35,8 +35,9 @@ variable "servers" {
     rcon_passwd   = string
     server_passwd = string
     ssh_key_pair  = string
-    instance_type = optional(string, "t3a.small")  # Optional, defaults to t3a.medium
+    instance_type = optional(string, "t3a.small")
   }))
   description = "Map of CS2 servers to deploy. Key is used as unique identifier."
 
 }
+
