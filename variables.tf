@@ -17,7 +17,7 @@ variable "image_id" {
 
 variable "ssh_allowed_cidrs" {
   type    = list(string)
-  default = ["161.22.57.32/32"]
+  default = []
 }
 
 variable "s3_serverfiles_backup" {
@@ -35,7 +35,8 @@ variable "servers" {
     rcon_passwd   = string
     server_passwd = string
     ssh_key_pair  = string
-    instance_type = optional(string, "t3a.medium")  # Optional, defaults to t3a.medium
+    instance_type = optional(string, "t3a.small")  # Optional, defaults to t3a.medium
   }))
   description = "Map of CS2 servers to deploy. Key is used as unique identifier."
+
 }
