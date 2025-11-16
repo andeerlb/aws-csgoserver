@@ -5,6 +5,7 @@ data "template_file" "file_user_data" {
     SERVER_NAME = var.server_name
     RCON_PASSWD = var.rcon_passwd
     GSLT_TOKEN  = var.gslt_token
+    SERVER_PASSWD = var.server_passwd
   }
 }
 

@@ -3,4 +3,4 @@
 server_name = ""
 gslt_token  = ""
 rcon_passwd = ""
-
+server_passwd = ""

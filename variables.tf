@@ -15,6 +15,10 @@ variable "ssh_key_pair" {
   default = "wtpoc-keypair"
 }
 
+variable "server_passwd" {
+  type    = string
+}
+
 variable "server_name" {
   type    = string
 }

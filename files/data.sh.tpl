@@ -64,14 +64,14 @@ mkdir -p /home/$USER/serverfiles/game/csgo/cfg
 # Write CS2 main server configuration file
 # -------------------------------
 cat <<EOT > /home/$USER/serverfiles/game/csgo/cfg/cs2server.cfg
-hostname "${SERVER_NAME}"       # Server name
-rcon_password "${RCON_PASSWD}"  # RCON password for remote console
-sv_password ""                  # Server password (empty = public)
+hostname "${SERVER_NAME}"
+rcon_password "${RCON_PASSWD}"
+sv_password "${SERVER_PASSWD}"
 sv_contact "andeerlbdev@gmail.com"
-sv_lan 0                        # 0 = public, 1 = LAN only
-sv_cheats 0                     # Disable cheats
+sv_lan 0
+sv_cheats 0
 sv_tags "128-tick"
-sv_region 5                      # 5 = Brazil
+sv_region 5
 log on
 sv_logbans 1
 sv_logecho 1
