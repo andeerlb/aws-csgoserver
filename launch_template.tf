@@ -20,7 +20,7 @@ resource "aws_launch_template" "cs2" {
   ebs_optimized                        = true
   image_id                             = var.image_id
   instance_initiated_shutdown_behavior = "terminate"
-  instance_type                        = "t3a.medium"
+  instance_type                        = each.value.instance_type
   user_data                            = base64encode(data.template_file.file_user_data[each.key].rendered)
 
   key_name = each.value.ssh_key_pair
