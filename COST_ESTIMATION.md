@@ -1,4 +1,4 @@
-# 🕹️ AWS CS2 Server – Cost Estimate
+# AWS CS2 Server – Cost Estimate
 
 This document shows cost estimates for running a **Counter-Strike 2** server on AWS using this repository.  
 The values consider the **sa-east-1 (São Paulo)** region, which is one of the more expensive AWS regions.
