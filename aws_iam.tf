@@ -23,7 +23,6 @@ resource "aws_iam_role" "cs2server" {
   }, var.default_tags)
 }
 
-# IAM Policy for S3 backup bucket access
 resource "aws_iam_role_policy" "cs2server_s3_backup" {
   for_each = var.servers
   
@@ -37,7 +36,8 @@ resource "aws_iam_role_policy" "cs2server_s3_backup" {
         Effect = "Allow"
         Action = [
           "s3:GetObject",
-          "s3:ListBucket"
+          "s3:ListBucket",
+          "s3:GetAccelerateConfiguration"
         ]
         Resource = [
           "arn:aws:s3:::${var.s3_serverfiles_backup}",
