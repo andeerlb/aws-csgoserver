@@ -25,6 +25,11 @@ sudo apt install -y \
 cd /home/$USER/
 
 # -------------------------------
+# Fix ownership and permissions
+# -------------------------------
+sudo chown -R $USER:$USER /home/$USER/serverfiles
+
+# -------------------------------
 # Restore from S3 backup if exists
 # -------------------------------
 BACKUP_FILE="cs2-server-backup.tar.gz"
@@ -42,38 +47,44 @@ echo "-------------------------------"
 echo "Checking for existing backup in S3..."
 echo "S3 Bucket: ${S3_SERVERFILES_BACKUP}"
 echo "Backup File: $BACKUP_FILE"
-echo ""s
+echo ""
 
 # Check if backup exists in S3
 if aws s3 ls "s3://${S3_SERVERFILES_BACKUP}/$BACKUP_FILE" >/dev/null 2>&1; then
-    echo "Found backup file in S3, downloading..."
-
-    # Download backup (Transfer Acceleration automatic if enabled)
-    aws s3 cp "s3://${S3_SERVERFILES_BACKUP}/$BACKUP_FILE" "$LOCAL_TMP"
-
-    # Verify download succeeded
-    if [ ! -f "$LOCAL_TMP" ]; then
-        echo "Error: Backup download failed. Exiting."
-        exit 1
-    fi
+    echo "Found backup file in S3, restoring via streaming..."
 
     # Ensure serverfiles directory exists
     mkdir -p "$SERVERFILES_DIR"
 
-    # Extract backup
-    echo "Extracting backup to $SERVERFILES_DIR..."
-    tar -xzf "$LOCAL_TMP" -C "$SERVERFILES_DIR"
+    # Check if Transfer Acceleration is enabled
+    ACCEL_STATUS=$(aws s3api get-bucket-accelerate-configuration \
+        --bucket "$S3_SERVERFILES_BACKUP" \
+        --query 'Status' --output text 2>/dev/null || echo "Disabled")
+
+    # Determine S3 endpoint
+    if [[ "$ACCEL_STATUS" == "Enabled" ]]; then
+        echo "Using S3 Transfer Acceleration..."
+        S3_URI="s3://$S3_SERVERFILES_BACKUP/$BACKUP_FILE"
+        aws s3 cp "$S3_URI" - | tar -xz -C "$SERVERFILES_DIR"
+    else
+        echo "Transfer Acceleration disabled. Using normal S3 endpoint..."
+        aws s3 cp "s3://$S3_SERVERFILES_BACKUP/$BACKUP_FILE" - | tar -xz -C "$SERVERFILES_DIR"
+    fi
+
+    # Check tar exit code
+    if [[ $? -ne 0 ]]; then
+        echo "Error: Backup extraction failed!"
+        exit 1
+    fi
 
     # Fix permissions
     chown -R $USER:$USER "$SERVERFILES_DIR"
-
-    # Cleanup
-    rm -f "$LOCAL_TMP"
 
     echo "Backup restored successfully!"
 else
     echo "No backup found in S3, proceeding with fresh install..."
 fi
+
 echo "-------------------------------"
 echo ""
 
@@ -96,12 +107,18 @@ su - $USER -c "/home/$USER/cs2server auto-install"
 # -------------------------------
 # Configure LGSM (GSLT, tickrate, default map, start parameters)
 # -------------------------------
-CONFIG_FILE="/home/$USER/lgsm/config-lgsm/cs2server/_default.cfg"
+CONFIG_FILE=/home/$USER/lgsm/config-lgsm/cs2server/_default.cfg
 
 if [ -f "$CONFIG_FILE" ]; then
-  # Set correct values
-  sed -i "s|^startparameters=.*|startparameters=\"-dedicated -ip $\{ip} -port $\{port} -maxplayers $\{maxplayers} -authkey $\{wsapikey} +exec $\{selfname}.cfg -tickrate 128 +map de_dust2 +sv_setsteamaccount ${GSLT_TOKEN}\"|" "$CONFIG_FILE"
+    if grep -q "^startparameters=" "$CONFIG_FILE"; then
+        sed -i "s|^startparameters=.*|startparameters=\"-dedicated -ip $\{ip} -port $\{port} -maxplayers $\{maxplayers} -authkey $\{wsapikey} +exec $\{selfname}.cfg -tickrate 128 +map de_dust2 +sv_setsteamaccount ${GSLT_TOKEN}\"|" "$CONFIG_FILE"
+    else
+        echo "startparameters=\"-dedicated -ip $\{ip} -port $\{port} -maxplayers $\{maxplayers} -authkey $\{wsapikey} +exec $\{selfname}.cfg -tickrate 128 +map de_dust2 +sv_setsteamaccount ${GSLT_TOKEN}\"" >> "$CONFIG_FILE"
+    fi
+else
+    echo "startparameters=\"-dedicated -ip $\{ip} -port $\{port} -maxplayers $\{maxplayers} -authkey $\{wsapikey} +exec $\{selfname}.cfg -tickrate 128 +map de_dust2 +sv_setsteamaccount ${GSLT_TOKEN}\"" > "$CONFIG_FILE"
 fi
+
 # -------------------------------
 # Create CS2 server configuration directory if missing
 # -------------------------------
@@ -138,22 +155,18 @@ writeip
 EOT
 
 # -------------------------------
+# Add SteamIDs with RCON access
+# -------------------------------
+ADMIN_FILE=/home/$USER/serverfiles/game/csgo/cfg/admins_simple.ini
+
+cat <<EOT > "$ADMIN_FILE"
+"STEAM_0:0:XXXX" "PASSWD" "99:z"
+EOT
+
+echo "Admins added to $ADMIN_FILE"
+
+# -------------------------------
 # Fix ownership and permissions
 # -------------------------------
 sudo chown -R $USER:$USER /home/$USER/serverfiles
 sudo chown -R $USER:$USER /home/$USER/lgsm
-
-# -------------------------------
-# Setup cron jobs for auto-update and monitoring
-# -------------------------------
-crontab -u $USER -l > /home/$USER/crontab_file 2>/dev/null || true
-echo "0 * * * * /home/$USER/cs2server update" >> /home/$USER/crontab_file
-echo "*/5 * * * * /home/$USER/cs2server monitor" >> /home/$USER/crontab_file
-crontab -u $USER /home/$USER/crontab_file
-rm /home/$USER/crontab_file
-
-# -------------------------------
-# Update and start CS2 server
-# -------------------------------
-su - $USER -c "/home/$USER/cs2server update"
-su - $USER -c "/home/$USER/cs2server start"

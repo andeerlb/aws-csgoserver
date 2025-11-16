@@ -163,3 +163,4 @@ Add:
 - [LinuxGSM CS2 Docs](https://docs.linuxgsm.com/game-servers/counter-strike-2)
 - [CS2 Server Commands](https://totalcsgo.com/commands)
 - [Steam Workshop](https://steamcommunity.com/app/730/workshop/)
+- [Rcon tool](https://rcon.srcds.pro/)
