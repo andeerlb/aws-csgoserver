@@ -102,7 +102,7 @@ su - $USER -c "/home/$USER/cs2server auto-install"
 # -------------------------------
 # Configure LGSM (GSLT, tickrate, default map, start parameters)
 # -------------------------------
-CONFIG_FILE=/home/$USER/lgsm/config-lgsm/cs2server/_default.cfg
+CONFIG_FILE=/home/$USER/lgsm/config-lgsm/cs2server/cs2server.cfg
 
 if [ -f "$CONFIG_FILE" ]; then
     if grep -q "^startparameters=" "$CONFIG_FILE"; then
