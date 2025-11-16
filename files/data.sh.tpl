@@ -25,22 +25,6 @@ sudo apt install -y \
 cd /home/$USER/
 
 # -------------------------------
-# Download LinuxGSM
-# -------------------------------
-wget -O linuxgsm.sh https://linuxgsm.sh
-chmod +x linuxgsm.sh
-
-# -------------------------------
-# Install CS2 server using LinuxGSM
-# -------------------------------
-su - $USER -c "bash linuxgsm.sh cs2server"
-
-# -------------------------------
-# Auto-install CS2 server
-# -------------------------------
-su - $USER -c "/home/$USER/cs2server auto-install"
-
-# -------------------------------
 # Restore from S3 backup if exists
 # -------------------------------
 BACKUP_FILE="cs2-server-backup.tar.gz"
@@ -64,6 +48,22 @@ if aws s3 ls "s3://$S3_SERVERFILES_BACKUP/$BACKUP_FILE" 2>/dev/null; then
 else
   echo "No backup found in S3, proceeding with fresh install..."
 fi
+
+# -------------------------------
+# Download LinuxGSM
+# -------------------------------
+wget -O linuxgsm.sh https://linuxgsm.sh
+chmod +x linuxgsm.sh
+
+# -------------------------------
+# Install CS2 server using LinuxGSM
+# -------------------------------
+su - $USER -c "bash linuxgsm.sh cs2server"
+
+# -------------------------------
+# Auto-install CS2 server
+# -------------------------------
+su - $USER -c "/home/$USER/cs2server auto-install"
 
 # -------------------------------
 # Configure LGSM (GSLT, tickrate, default map, start parameters)
