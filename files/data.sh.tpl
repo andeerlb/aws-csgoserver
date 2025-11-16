@@ -17,7 +17,7 @@ sudo apt update -y
 sudo apt install -y \
   curl wget tar bzip2 gzip unzip python3 \
   lib32gcc-s1 lib32stdc++6 libc6-i386 libc6:i386 \
-  tmux jq bc
+  tmux jq bc awscli
 
 # -------------------------------
 # Move to user's home directory
@@ -39,6 +39,31 @@ su - $USER -c "bash linuxgsm.sh cs2server"
 # Auto-install CS2 server
 # -------------------------------
 su - $USER -c "/home/$USER/cs2server auto-install"
+
+# -------------------------------
+# Restore from S3 backup if exists
+# -------------------------------
+BACKUP_FILE="cs2-server-backup.tar.gz"
+
+if aws s3 ls "s3://$S3_SERVERFILES_BACKUP/$BACKUP_FILE" 2>/dev/null; then
+  echo "Found backup file in S3, downloading..."
+  
+  # Download backup
+  aws s3 cp "s3://$S3_SERVERFILES_BACKUP/$BACKUP_FILE" "/tmp/$BACKUP_FILE"
+  
+  # Extract to serverfiles directory
+  tar -xzf "/tmp/$BACKUP_FILE" -C /home/$USER/serverfiles/
+  
+  # Fix permissions
+  chown -R $USER:$USER /home/$USER/serverfiles/
+  
+  # Cleanup
+  rm "/tmp/$BACKUP_FILE"
+  
+  echo "Backup restored successfully!"
+else
+  echo "No backup found in S3, proceeding with fresh install..."
+fi
 
 # -------------------------------
 # Configure LGSM (GSLT, tickrate, default map, start parameters)

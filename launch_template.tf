@@ -4,10 +4,11 @@ data "template_file" "file_user_data" {
   template = file("${path.module}/files/data.sh.tpl")
 
   vars = {
-    SERVER_NAME   = each.value.server_name
-    RCON_PASSWD   = each.value.rcon_passwd
-    GSLT_TOKEN    = each.value.gslt_token
-    SERVER_PASSWD = each.value.server_passwd
+    SERVER_NAME      = each.value.server_name
+    RCON_PASSWD      = each.value.rcon_passwd
+    GSLT_TOKEN       = each.value.gslt_token
+    SERVER_PASSWD    = each.value.server_passwd
+    S3_SERVERFILES_BACKUP   = var.s3_serverfiles_backup
   }
 }
 

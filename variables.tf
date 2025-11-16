@@ -20,6 +20,11 @@ variable "ssh_allowed_cidrs" {
   default = ["161.22.57.32/32"]
 }
 
+variable "s3_serverfiles_backup" {
+  type        = string
+  description = "S3 bucket with serverfiles to optimize initial setup time. (it should have a steamcmd serverfiles)"
+}
+
 # List of CS2 servers to deploy
 # Each server will be an isolated EC2 instance
 variable "servers" {
