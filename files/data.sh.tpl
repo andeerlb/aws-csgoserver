@@ -106,12 +106,12 @@ CONFIG_FILE=/home/$USER/lgsm/config-lgsm/cs2server/cs2server.cfg
 
 if [ -f "$CONFIG_FILE" ]; then
     if grep -q "^startparameters=" "$CONFIG_FILE"; then
-        sed -i "s|^startparameters=.*|startparameters=\"-dedicated -ip $\{ip} -port $\{port} -maxplayers $\{maxplayers} -authkey $\{wsapikey} +exec $\{selfname}.cfg -tickrate 128 +map de_dust2 +sv_setsteamaccount ${GSLT_TOKEN}\"|" "$CONFIG_FILE"
+        sed -i "s|^startparameters=.*|startparameters=\"-dedicated -ip $\\{ip} -port $\\{port} -maxplayers $\\{maxplayers} -authkey $\\{wsapikey} +exec $\\{selfname}.cfg -tickrate 128 +map de_dust2 +sv_setsteamaccount ${GSLT_TOKEN}\"|" "$CONFIG_FILE"
     else
-        echo "startparameters=\"-dedicated -ip $\{ip} -port $\{port} -maxplayers $\{maxplayers} -authkey $\{wsapikey} +exec $\{selfname}.cfg -tickrate 128 +map de_dust2 +sv_setsteamaccount ${GSLT_TOKEN}\"" >> "$CONFIG_FILE"
+        echo "startparameters=\"-dedicated -ip $\\{ip} -port $\\{port} -maxplayers $\\{maxplayers} -authkey $\\{wsapikey} +exec $\\{selfname}.cfg -tickrate 128 +map de_dust2 +sv_setsteamaccount ${GSLT_TOKEN}\"" >> "$CONFIG_FILE"
     fi
 else
-    echo "startparameters=\"-dedicated -ip $\{ip} -port $\{port} -maxplayers $\{maxplayers} -authkey $\{wsapikey} +exec $\{selfname}.cfg -tickrate 128 +map de_dust2 +sv_setsteamaccount ${GSLT_TOKEN}\"" > "$CONFIG_FILE"
+    echo "startparameters=\"-dedicated -ip $\\{ip} -port $\\{port} -maxplayers $\\{maxplayers} -authkey $\\{wsapikey} +exec $\\{selfname}.cfg -tickrate 128 +map de_dust2 +sv_setsteamaccount ${GSLT_TOKEN}\"" > "$CONFIG_FILE"
 fi
 
 # -------------------------------
