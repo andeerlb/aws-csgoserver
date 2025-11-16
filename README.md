@@ -90,22 +90,22 @@ or to show the complete log
 sudo less /var/log/cloud-init.log
 ```
 
-## 5. After installation completes
+### 5. After installation completes
+
+#### 5.1 Test Server
 ```
 ./cs2server details
 ./cs2server console  # CTRL+B followed by D to exit (tmux)
 ```
 
-### 5. Test Server
-
-#### In CS2 client:
+#### 5.2 In CS2 client:
 
 1. Open CS2 console (`~` key)
 2. Type: `connect <PUBLIC_IP>:27015`
 
 Or add to favorites in the server browser.
 
-#### Test RCON:
+#### 5.3 Test RCON:
 ```bash
 # On server via SSH
 ./cs2server console
