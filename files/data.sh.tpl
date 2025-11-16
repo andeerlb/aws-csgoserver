@@ -44,25 +44,24 @@ echo "S3 Bucket: ${S3_SERVERFILES_BACKUP}"
 echo "Backup File: $BACKUP_FILE"
 echo ""
 
+echo ""
+echo "-------------------------------"
+echo "Checking for existing backup in S3..."
+echo "S3 Bucket: ${S3_SERVERFILES_BACKUP}"
+echo "Backup File: $BACKUP_FILE"
+echo ""
+
 # Check if backup exists in S3
 if aws s3 ls "s3://${S3_SERVERFILES_BACKUP}/$BACKUP_FILE" >/dev/null 2>&1; then
     echo "Found backup file in S3, downloading..."
 
-    # Check if Transfer Acceleration is enabled
-    ACCEL_STATUS=$(aws s3api get-bucket-accelerate-configuration --bucket "$S3_SERVERFILES_BACKUP" --query 'Status' --output text 2>/dev/null || echo "Disabled")
+    # Download backup (Transfer Acceleration automatic if enabled)
+    aws s3 cp "s3://${S3_SERVERFILES_BACKUP}/$BACKUP_FILE" "$LOCAL_TMP"
 
-    if [[ "$ACCEL_STATUS" == "Enabled" ]]; then
-        echo "Using S3 Transfer Acceleration for download..."
-        AWS_ENDPOINT="https://${S3_SERVERFILES_BACKUP}.s3-accelerate.amazonaws.com"
-        aws s3 cp "s3://${S3_SERVERFILES_BACKUP}/$BACKUP_FILE" "$LOCAL_TMP" \
-            --endpoint-url "$AWS_ENDPOINT" \
-            --expected-size 48G \
-            --only-show-errors
-    else
-        echo "Downloading without Transfer Acceleration..."
-        aws s3 cp "s3://${S3_SERVERFILES_BACKUP}/$BACKUP_FILE" "$LOCAL_TMP" \
-            --expected-size 48G \
-            --only-show-errors
+    # Verify download succeeded
+    if [ ! -f "$LOCAL_TMP" ]; then
+        echo "Error: Backup download failed. Exiting."
+        exit 1
     fi
 
     # Ensure serverfiles directory exists
@@ -84,7 +83,6 @@ else
 fi
 echo "-------------------------------"
 echo ""
-
 
 # -------------------------------
 # Download LinuxGSM
