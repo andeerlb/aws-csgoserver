@@ -42,14 +42,7 @@ echo "-------------------------------"
 echo "Checking for existing backup in S3..."
 echo "S3 Bucket: ${S3_SERVERFILES_BACKUP}"
 echo "Backup File: $BACKUP_FILE"
-echo ""
-
-echo ""
-echo "-------------------------------"
-echo "Checking for existing backup in S3..."
-echo "S3 Bucket: ${S3_SERVERFILES_BACKUP}"
-echo "Backup File: $BACKUP_FILE"
-echo ""
+echo ""s
 
 # Check if backup exists in S3
 if aws s3 ls "s3://${S3_SERVERFILES_BACKUP}/$BACKUP_FILE" >/dev/null 2>&1; then
