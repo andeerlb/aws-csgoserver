@@ -91,6 +91,7 @@ sudo less /var/log/cloud-init.log
 ```
 
 ## 5. After installation completes
+```
 ./cs2server details
 ./cs2server console  # CTRL+B followed by D to exit (tmux)
 ```
